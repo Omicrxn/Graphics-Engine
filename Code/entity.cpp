@@ -75,7 +75,7 @@ void Entity::renderModel(App* app)
 	
 	Program& programTexturedGeometry = app->programs[app->texturedGeometryProgramIdx];
 	glUseProgram(programTexturedGeometry.handle);
-	Model& model = app->models[app->model];
+	Model& model = app->models[this->model];
 	Mesh& mesh = app->meshes[model.meshIdx];
 	for (u32 i = 0; i < mesh.submeshes.size(); ++i)
 	{
@@ -109,6 +109,10 @@ void Entity::renderModel(App* app)
 		glBindTexture(GL_TEXTURE_2D, app->textures[submeshMaterial.albedoTextureIdx].handle);
 		glUniform1i(app->texturedGeometryProgramIdx, 0);
 
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, app->textures[submeshMaterial.specularTextureIdx].handle);
+		glUniform1i(app->texturedGeometryProgramIdx, 1);
+
 		Submesh& submesh = mesh.submeshes[i];
 		glDrawElements(GL_TRIANGLES, submesh.indices.size(), GL_UNSIGNED_INT, (void*)(u64)submesh.indexOffset);
 
@@ -117,10 +121,11 @@ void Entity::renderModel(App* app)
 	glUseProgram(0);
 }
 
-glm::mat4 Entity::transformPositionScale(const glm::vec3& pos, const glm::vec3& scaleFactor)
+glm::mat4 Entity::transformPositionScaleRotation(const glm::vec3& pos, const glm::vec3& scaleFactor, float rotationDeg)
 {
 	worldMatrix = glm::translate(worldMatrix, pos);
 	worldMatrix = glm::scale(worldMatrix, scaleFactor);
+	worldMatrix = glm::rotate(worldMatrix, glm::radians(rotationDeg), glm::vec3(0.0f, 1.0f, 0.0f));;
 	return worldMatrix;
 }
 

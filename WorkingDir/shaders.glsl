@@ -51,6 +51,9 @@ struct Light
 	vec3 ambient;
 	vec3 diffuse;
 	vec3 specular;
+	float constant;
+	float lin;
+	float quadratic;
 };
 layout(binding = 0, std140) uniform GlobalParams
 {
@@ -91,10 +94,14 @@ struct Light
 	vec3 ambient;
 	vec3 diffuse;
 	vec3 specular;
+	float constant;
+	float lin;
+	float quadratic;
 
 };
 in vec2 vTexCoord;
 uniform sampler2D uTexture;
+uniform sampler2D uSpecularMap;;
 uniform vec3 uMaterialAmbient;
 uniform vec3 uMaterialDiffuse;
 uniform vec3 uMaterialSpecular;
@@ -118,19 +125,26 @@ void main()
 {
 	vec3 finalColor = vec3(0.0f);
 	for(int i = 0; i<uLightCount;++i){
+		float distance = length(uLight[i].position - vPosition);
+		float attenuation = 1.0f / (uLight[i].constant + uLight[i].lin * distance + uLight[i].quadratic * (distance * distance) );
+
 		vec3 norm = normalize(vNormal);
 		vec3 lightDir = normalize(uLight[i].position - vPosition);
 		float diff = max(dot(norm,lightDir),0.0f);
-		vec3 diffuse = uMaterialDiffuse* uLight[i].diffuse * diff * uLight[i].color;
+		vec3 diffuse = vec3(texture(uTexture, vTexCoord)) * uLight[i].diffuse * diff * uLight[i].color;
 		float spec = 0.0f;
 		if(diff > 0.0f){
 			vec3 viewDir = normalize(uCameraPosition-vPosition);
 			vec3 reflectDir = reflect(-lightDir,norm);
 			spec = pow(max(dot(viewDir,reflectDir),0.0f),uMaterialShininess);
 		}
-		vec3 specular = uMaterialSpecular * uLight[i].specular * spec * uLight[i].color;
+		vec3 specular = texture(uSpecularMap, vTexCoord).rgb * uLight[i].specular * spec * uLight[i].color;
 		vec4 texColor =  texture(uTexture,vTexCoord);
-		finalColor += (uLight[i].ambient * uMaterialAmbient * uLight[i].color + diffuse + specular) * texColor.rgb;
+		vec3 ambient = uLight[i].ambient;
+		ambient *= attenuation;
+		diffuse *= attenuation;
+		specular *= attenuation;
+		finalColor += (ambient * vec3(texture(uTexture, vTexCoord)) * uLight[i].color + diffuse + specular) * texColor.rgb;
 	} 
 	oColor = vec4(finalColor,1.0f);
 }

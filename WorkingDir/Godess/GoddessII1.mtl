@@ -1,0 +1,47 @@
+# Blender 3.4.1 MTL File: 'None'
+# www.blender.org
+
+newmtl mn_need_00_hair_mi
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 2
+Pr 0.500000
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+map_Kd mn_need_00_head_cm.png
+map_Pm mn_need_00_head_m.png
+map_Ks mn_need_00_head_s.png
+map_d mn_need_00_head_d.png
+
+newmtl mn_need_00_head_mi
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 2
+Pr 0.500000
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+map_Kd mn_need_00_head_d.png
+map_Pm mn_need_00_head_m.png
+map_Ks mn_need_00_head_s.png
+map_d mn_need_00_head_d.png
+
+newmtl mn_need_00_mi
+Ni 1.450000
+illum 2
+Pr 0.500000
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+map_Kd mn_need_00_d_loc_int.png
+map_Pm mn_need_00_m.png
+map_Ks mn_need_00_s_loc_int.png
+map_Ke mn_need_00_e.png
+map_d mn_need_00_d_loc_int.png

@@ -262,7 +262,8 @@ void Init(App* app)
 
 	app->texturedGeometryProgramIdx = LoadProgram(app, "shaders.glsl", "MODEL_SHADER");
 	//app->texturedGeometryProgramIdx = LoadProgram(app, "Shaders/mesh_shader.glsl", "MODEL_SHADER");
-	app->model = LoadModel(app, "Patrick/Patrick.obj");
+	app->patrickModel = LoadModel(app, "Patrick/Patrick.obj");
+	app->bucketModel = LoadModel(app, "Godess/GoddessII1.obj");
 
 	// - set the blending state
 	GLint maxUniformBufferSize;
@@ -275,13 +276,14 @@ void Init(App* app)
 	app->cbuffer = CreateConstantBuffer(maxUniformBufferSize);
 
 	//initDice(app, &LoadProgram, &LoadTexture2D);
-	app->entities.push_back(new Entity(glm::vec3(0,0,0)));
-	app->entities.push_back(new Entity(glm::vec3(5,0,0)));
-	app->entities.push_back(new Entity(glm::vec3(-5,0,0)));
+	app->entities.push_back(new Entity(glm::vec3(0,0,-10), glm::vec3(1, 1, 1), 0.0f,app->patrickModel));
+	app->entities.push_back(new Entity(glm::vec3(5,-5,0), glm::vec3(6,6,6), -90.0f,app->bucketModel));
+	app->entities.push_back(new Entity(glm::vec3(-5,-5,5), glm::vec3(5,5,5),-90.0f,app->bucketModel));
 
-	app->lights.push_back(new Light(LightType_Point,vec3(1,0,0), vec3(0, 0, 0), vec3(0, 10, 10)));
-	app->lights.push_back(new Light(LightType_Point,vec3(0,1,0), vec3(0, 0, 0), vec3(5, 0, 5)));
-	app->lights.push_back(new Light(LightType_Point,vec3(0,0,1), vec3(0, 0, 0), vec3(-5, 0, 5)));
+	//app->lights.push_back(new Light(LightType_Point,vec3(1,1,1), vec3(0, 0, 0), vec3(0, 10, 10)));
+	app->lights.push_back(new Light(LightType_Point,vec3(1,0,0), vec3(0, 0, 0), vec3(5, 5, 8)));
+	app->lights.push_back(new Light(LightType_Point,vec3(0,1,0), vec3(0, 0, 0), vec3(5, 0, 8)));
+	app->lights.push_back(new Light(LightType_Point,vec3(0,0,1), vec3(0, 0, 0), vec3(-5, 0, 8)));
 
 	CreateFramebuffer(app);
 	glEnable(GL_DEPTH_TEST);

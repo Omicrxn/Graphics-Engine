@@ -18,4 +18,7 @@ void Light::updateLight(App* app)
 	PushVec3(app->cbuffer, ambient);
 	PushVec3(app->cbuffer, diffuse);
 	PushVec3(app->cbuffer, specular);
+	PushFloat(app->cbuffer,1.0f); //constant light
+	PushFloat(app->cbuffer, 0.027f); //linear light
+	PushFloat(app->cbuffer, 0.0028f); //quadratic light
 }

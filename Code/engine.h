@@ -144,7 +144,8 @@ struct App
     std::vector<Mesh> meshes;
     std::vector<Model> models;
     std::vector<Program>  programs;
-    u32 model;
+    u32 patrickModel;
+    u32 bucketModel;
     // program indices
     u32 texturedGeometryProgramIdx;
     
