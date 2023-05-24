@@ -15,4 +15,7 @@ void Light::updateLight(App* app)
 	PushVec3(app->cbuffer, color);
 	PushVec3(app->cbuffer, direction);
 	PushVec3(app->cbuffer, position);
+	PushVec3(app->cbuffer, ambient);
+	PushVec3(app->cbuffer, diffuse);
+	PushVec3(app->cbuffer, specular);
 }

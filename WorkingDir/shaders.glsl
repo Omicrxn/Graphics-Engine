@@ -48,8 +48,10 @@ struct Light
 	vec3 color;
 	vec3 direction;
 	vec3 position;
+	vec3 ambient;
+	vec3 diffuse;
+	vec3 specular;
 };
-
 layout(binding = 0, std140) uniform GlobalParams
 {
 	vec3 uCameraPosition;
@@ -80,7 +82,17 @@ void main()
 }
 
 #elif defined(FRAGMENT) ///////////////////////////////////////////////
+struct Light
+{
+	unsigned int type;
+	vec3 color;
+	vec3 direction;
+	vec3 position;
+	vec3 ambient;
+	vec3 diffuse;
+	vec3 specular;
 
+};
 in vec2 vTexCoord;
 uniform sampler2D uTexture;
 
@@ -89,17 +101,35 @@ in vec3 vPosition;
 in vec3 vNormal;
 in vec3 vViewDir;
 
-
+layout(binding = 0, std140) uniform GlobalParams
+{
+	vec3 uCameraPosition;
+	unsigned int uLightCount;
+	Light uLight[16];
+};
 
 layout(location=0) out vec4 oColor;
 
 void main()
 {
-
-	oColor = texture(uTexture,vTexCoord);
-	
+	vec3 finalColor = vec3(0.0f);
+	for(int i = 0; i<uLightCount;++i){
+		vec3 norm = normalize(vNormal);
+		vec3 lightDir = normalize(uLight[i].position - vPosition);
+		float diff = max(dot(norm,lightDir),0.0f);
+		vec3 diffuse = uLight[i].diffuse * diff * uLight[i].color;
+		float spec = 0.0f;
+		if(diff > 0.0f){
+			vec3 viewDir = normalize(uCameraPosition-vPosition);
+			vec3 reflectDir = reflect(-lightDir,norm);
+			spec = pow(max(dot(viewDir,reflectDir),0.0f),32.0f);
+		}
+		vec3 specular = uLight[i].specular * spec * uLight[i].color;
+		vec4 texColor =  texture(uTexture,vTexCoord);
+		finalColor += (uLight[i].ambient * uLight[i].color + diffuse + specular) * texColor.rgb;
+	} 
+	oColor = vec4(finalColor,1.0f);
 }
-
 #endif
 #endif
 

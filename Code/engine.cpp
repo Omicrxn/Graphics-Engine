@@ -279,7 +279,10 @@ void Init(App* app)
 	app->entities.push_back(new Entity(glm::vec3(5,0,0)));
 	app->entities.push_back(new Entity(glm::vec3(-5,0,0)));
 
-	app->lights.push_back(new Light(LightType_Point,vec3(1,0,0), vec3(0, 0, 0), vec3(5, 0, 5)));
+	app->lights.push_back(new Light(LightType_Point,vec3(1,1,1), vec3(0, 0, 0), vec3(5, 0, 5)));
+	app->lights.push_back(new Light(LightType_Point,vec3(1,1,1), vec3(0, 0, 0), vec3(5, 0, 5)));
+	app->lights.push_back(new Light(LightType_Point,vec3(1,1,1), vec3(0, 0, 0), vec3(5, 0, 5)));
+	app->lights.push_back(new Light(LightType_Point,vec3(1,1,1), vec3(0, 0, 0), vec3(5, 0, 5)));
 
 	CreateFramebuffer(app);
 	glEnable(GL_DEPTH_TEST);
