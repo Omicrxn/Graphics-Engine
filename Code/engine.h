@@ -102,6 +102,10 @@ struct Material
     vec3 albedo;
     vec3 emissive;
     f32 smoothness;
+    vec3 ambient;  // New field
+    vec3 diffuse;  // New field
+    vec3 specular; // New field
+    f32 shininess; // New field
     u32 albedoTextureIdx;
     u32 emissiveTextureIdx;
     u32 specularTextureIdx;

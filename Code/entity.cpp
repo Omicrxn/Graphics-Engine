@@ -84,6 +84,27 @@ void Entity::renderModel(App* app)
 		u32 submeshMaterialIdx = model.materialIdx[i];
 		Material& submeshMaterial = app->materials[submeshMaterialIdx];
 
+		GLint ambientLoc = glGetUniformLocation(programTexturedGeometry.handle, "uMaterialAmbient");
+		GLint diffuseLoc = glGetUniformLocation(programTexturedGeometry.handle, "uMaterialDiffuse");
+		GLint specularLoc = glGetUniformLocation(programTexturedGeometry.handle, "uMaterialSpecular");
+		GLint shininessLoc = glGetUniformLocation(programTexturedGeometry.handle, "uMaterialShininess");
+		//Default values in case the material does not have a field
+		glm::vec3 defaultAmbient = glm::vec3(1.0f, 1.0f, 1.0f);
+		glm::vec3 defaultDiffuse = glm::vec3(1.0f, 1.0f, 1.0f);
+		glm::vec3 defaultSpecular = glm::vec3(1.0f, 1.0f, 1.0f);
+		float defaultShininess = 32.0f;
+
+		// Use actual values if they are not zero
+		glm::vec3 actualAmbient = (submeshMaterial.ambient == glm::vec3(0.0f, 0.0f, 0.0f)) ? defaultAmbient : submeshMaterial.ambient;
+		glm::vec3 actualDiffuse = (submeshMaterial.diffuse == glm::vec3(0.0f, 0.0f, 0.0f)) ? defaultDiffuse : submeshMaterial.diffuse;
+		glm::vec3 actualSpecular = (submeshMaterial.specular == glm::vec3(0.0f, 0.0f, 0.0f)) ? defaultSpecular : submeshMaterial.specular;
+		float actualShininess = (submeshMaterial.shininess == 0.0f) ? defaultShininess : submeshMaterial.shininess;
+
+		glUniform3fv(ambientLoc, 1, glm::value_ptr(actualAmbient));
+		glUniform3fv(diffuseLoc, 1, glm::value_ptr(actualDiffuse));
+		glUniform3fv(specularLoc, 1, glm::value_ptr(actualSpecular));
+		glUniform1f(shininessLoc, actualShininess);
+
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, app->textures[submeshMaterial.albedoTextureIdx].handle);
 		glUniform1i(app->texturedGeometryProgramIdx, 0);

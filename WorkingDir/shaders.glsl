@@ -95,6 +95,10 @@ struct Light
 };
 in vec2 vTexCoord;
 uniform sampler2D uTexture;
+uniform vec3 uMaterialAmbient;
+uniform vec3 uMaterialDiffuse;
+uniform vec3 uMaterialSpecular;
+uniform float uMaterialShininess;
 
 
 in vec3 vPosition;
@@ -117,16 +121,16 @@ void main()
 		vec3 norm = normalize(vNormal);
 		vec3 lightDir = normalize(uLight[i].position - vPosition);
 		float diff = max(dot(norm,lightDir),0.0f);
-		vec3 diffuse = uLight[i].diffuse * diff * uLight[i].color;
+		vec3 diffuse = uMaterialDiffuse* uLight[i].diffuse * diff * uLight[i].color;
 		float spec = 0.0f;
 		if(diff > 0.0f){
 			vec3 viewDir = normalize(uCameraPosition-vPosition);
 			vec3 reflectDir = reflect(-lightDir,norm);
-			spec = pow(max(dot(viewDir,reflectDir),0.0f),32.0f);
+			spec = pow(max(dot(viewDir,reflectDir),0.0f),uMaterialShininess);
 		}
-		vec3 specular = uLight[i].specular * spec * uLight[i].color;
+		vec3 specular = uMaterialSpecular * uLight[i].specular * spec * uLight[i].color;
 		vec4 texColor =  texture(uTexture,vTexCoord);
-		finalColor += (uLight[i].ambient * uLight[i].color + diffuse + specular) * texColor.rgb;
+		finalColor += (uLight[i].ambient * uMaterialAmbient * uLight[i].color + diffuse + specular) * texColor.rgb;
 	} 
 	oColor = vec4(finalColor,1.0f);
 }
